@@ -1,4 +1,4 @@
-# Card Picker — 설계 스펙
+# 카드레이더 (CardRadar) — 설계 스펙
 
 **작성일:** 2026-06-05  
 **플랫폼:** Flutter (iOS / Android)  

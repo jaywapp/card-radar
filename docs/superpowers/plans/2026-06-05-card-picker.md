@@ -1,4 +1,4 @@
-# Card Picker — Implementation Plan
+# 카드레이더 (CardRadar) — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -78,9 +78,8 @@ card-picker/
 
 ```bash
 cd D:\workspace\repositories\apps
-flutter create card_picker --org com.jaywapp --platforms android,ios
-mv card_picker card-picker
-cd card-picker
+flutter create card_radar --org com.jaywapp --platforms android,ios
+cd card-radar
 ```
 
 - [ ] **Step 2: pubspec.yaml 의존성 추가**
@@ -369,8 +368,8 @@ class Merchant {
 - [ ] **Step 6: `lib/domain/entities/ranked_card.dart`**
 
 ```dart
-import 'package:card_picker/data/models/card.dart';
-import 'package:card_picker/data/models/card_benefit.dart';
+import 'package:card_radar/data/models/card.dart';
+import 'package:card_radar/data/models/card_benefit.dart';
 
 class RankedCard {
   final Card card;
@@ -407,7 +406,7 @@ git commit -m "feat: add core constants and data models"
 ```dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:card_picker/data/repositories/user_card_repository.dart';
+import 'package:card_radar/data/repositories/user_card_repository.dart';
 
 void main() {
   late UserCardRepository repo;
@@ -513,8 +512,8 @@ git commit -m "feat: add UserCardRepository with Hive local storage"
 import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:card_picker/data/models/card.dart';
-import 'package:card_picker/data/models/card_benefit.dart';
+import 'package:card_radar/data/models/card.dart';
+import 'package:card_radar/data/models/card_benefit.dart';
 
 class CardBenefitRepository {
   final SupabaseClient supabase;
@@ -610,8 +609,8 @@ git commit -m "feat: add CardBenefitRepository with Supabase and Hive cache"
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
-import 'package:card_picker/core/env.dart';
-import 'package:card_picker/data/models/merchant.dart';
+import 'package:card_radar/core/env.dart';
+import 'package:card_radar/data/models/merchant.dart';
 
 class MapRepository {
   static const _searchUrl =
@@ -699,9 +698,9 @@ git commit -m "feat: add MapRepository with Naver Local Search API"
 
 ```dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:card_picker/data/models/card.dart';
-import 'package:card_picker/data/models/card_benefit.dart';
-import 'package:card_picker/domain/usecases/card_ranking_usecase.dart';
+import 'package:card_radar/data/models/card.dart';
+import 'package:card_radar/data/models/card_benefit.dart';
+import 'package:card_radar/domain/usecases/card_ranking_usecase.dart';
 
 void main() {
   final cards = [
@@ -780,9 +779,9 @@ Expected: `Error: Cannot find 'CardRankingUseCase'`
 - [ ] **Step 3: `lib/domain/usecases/card_ranking_usecase.dart` 구현**
 
 ```dart
-import 'package:card_picker/data/models/card.dart';
-import 'package:card_picker/data/models/card_benefit.dart';
-import 'package:card_picker/domain/entities/ranked_card.dart';
+import 'package:card_radar/data/models/card.dart';
+import 'package:card_radar/data/models/card_benefit.dart';
+import 'package:card_radar/domain/entities/ranked_card.dart';
 
 class CardRankingUseCase {
   List<RankedCard> rank({
@@ -849,8 +848,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:card_picker/core/env.dart';
-import 'package:card_picker/app.dart';
+import 'package:card_radar/core/env.dart';
+import 'package:card_radar/app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -871,7 +870,7 @@ Future<void> main() async {
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:card_picker/presentation/router.dart';
+import 'package:card_radar/presentation/router.dart';
 
 class CardPickerApp extends ConsumerWidget {
   const CardPickerApp({super.key});
@@ -894,11 +893,11 @@ class CardPickerApp extends ConsumerWidget {
 
 ```dart
 import 'package:go_router/go_router.dart';
-import 'package:card_picker/presentation/screens/onboarding_screen.dart';
-import 'package:card_picker/presentation/screens/home_screen.dart';
-import 'package:card_picker/presentation/screens/search_screen.dart';
-import 'package:card_picker/presentation/screens/ranking_screen.dart';
-import 'package:card_picker/presentation/screens/my_cards_screen.dart';
+import 'package:card_radar/presentation/screens/onboarding_screen.dart';
+import 'package:card_radar/presentation/screens/home_screen.dart';
+import 'package:card_radar/presentation/screens/search_screen.dart';
+import 'package:card_radar/presentation/screens/ranking_screen.dart';
+import 'package:card_radar/presentation/screens/my_cards_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/onboarding',
@@ -927,9 +926,9 @@ final appRouter = GoRouter(
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:card_picker/data/models/card.dart';
-import 'package:card_picker/data/models/card_benefit.dart';
-import 'package:card_picker/data/repositories/card_benefit_repository.dart';
+import 'package:card_radar/data/models/card.dart';
+import 'package:card_radar/data/models/card_benefit.dart';
+import 'package:card_radar/data/repositories/card_benefit_repository.dart';
 
 final cardBenefitRepoProvider = Provider<CardBenefitRepository>((ref) {
   return CardBenefitRepository(
@@ -952,8 +951,8 @@ final allBenefitsProvider = FutureProvider<List<CardBenefit>>((ref) async {
 ```dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:card_picker/data/models/card.dart';
-import 'package:card_picker/data/repositories/user_card_repository.dart';
+import 'package:card_radar/data/models/card.dart';
+import 'package:card_radar/data/repositories/user_card_repository.dart';
 
 final userCardRepoProvider = Provider<UserCardRepository>((ref) {
   return UserCardRepository(box: Hive.box<String>('user_cards'));
@@ -1017,8 +1016,8 @@ git commit -m "feat: add main entry, router, and Riverpod providers"
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:card_picker/presentation/providers/card_benefits_provider.dart';
-import 'package:card_picker/presentation/providers/user_cards_provider.dart';
+import 'package:card_radar/presentation/providers/card_benefits_provider.dart';
+import 'package:card_radar/presentation/providers/user_cards_provider.dart';
 
 class MyCardsScreen extends ConsumerWidget {
   const MyCardsScreen({super.key});
@@ -1210,8 +1209,8 @@ git commit -m "feat: add HomeScreen with Naver Map"
 ```dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:card_picker/data/models/merchant.dart';
-import 'package:card_picker/data/repositories/map_repository.dart';
+import 'package:card_radar/data/models/merchant.dart';
+import 'package:card_radar/data/repositories/map_repository.dart';
 
 final mapRepoProvider = Provider<MapRepository>((ref) => MapRepository());
 
@@ -1243,7 +1242,7 @@ final merchantSearchProvider = FutureProvider.family<List<Merchant>, String>(
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:card_picker/data/models/merchant.dart';
+import 'package:card_radar/data/models/merchant.dart';
 
 class MerchantListItem extends StatelessWidget {
   final Merchant merchant;
@@ -1282,9 +1281,9 @@ class MerchantListItem extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:card_picker/core/categories.dart';
-import 'package:card_picker/presentation/providers/map_search_provider.dart';
-import 'package:card_picker/presentation/widgets/merchant_list_item.dart';
+import 'package:card_radar/core/categories.dart';
+import 'package:card_radar/presentation/providers/map_search_provider.dart';
+import 'package:card_radar/presentation/widgets/merchant_list_item.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -1375,7 +1374,7 @@ git commit -m "feat: add SearchScreen with Naver Local Search"
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:card_picker/domain/entities/ranked_card.dart';
+import 'package:card_radar/domain/entities/ranked_card.dart';
 
 class CardRankItem extends StatelessWidget {
   final RankedCard rankedCard;
@@ -1438,10 +1437,10 @@ class CardRankItem extends StatelessWidget {
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:card_picker/domain/usecases/card_ranking_usecase.dart';
-import 'package:card_picker/presentation/providers/card_benefits_provider.dart';
-import 'package:card_picker/presentation/providers/user_cards_provider.dart';
-import 'package:card_picker/presentation/widgets/card_rank_item.dart';
+import 'package:card_radar/domain/usecases/card_ranking_usecase.dart';
+import 'package:card_radar/presentation/providers/card_benefits_provider.dart';
+import 'package:card_radar/presentation/providers/user_cards_provider.dart';
+import 'package:card_radar/presentation/widgets/card_rank_item.dart';
 
 class RankingScreen extends ConsumerWidget {
   final String merchantName;
@@ -1522,8 +1521,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
-import 'package:card_picker/presentation/providers/card_benefits_provider.dart';
-import 'package:card_picker/presentation/providers/user_cards_provider.dart';
+import 'package:card_radar/presentation/providers/card_benefits_provider.dart';
+import 'package:card_radar/presentation/providers/user_cards_provider.dart';
 
 class OnboardingScreen extends ConsumerWidget {
   const OnboardingScreen({super.key});
