@@ -1,5 +1,5 @@
 name: card_radar
-description: "A new Flutter project."
+description: "카드레이더 — 결제 시 최적 혜택 카드 추천 앱"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -31,8 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.5.1
-  hive_flutter: ^1.1.0
-  hive: ^2.2.3
+  hive_ce: ^2.9.0
+  hive_ce_flutter: ^2.2.0
   go_router: ^14.2.0
 
 dev_dependencies:
