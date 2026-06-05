@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:card_radar/core/sample_data.dart';
 import 'package:card_radar/data/models/category.dart';
+import 'package:card_radar/presentation/providers/benefits_provider.dart';
 import 'package:card_radar/presentation/providers/user_cards_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -11,6 +11,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userCards = ref.watch(userCardsProvider);
+    final benefits = ref.watch(benefitsProvider).valueOrNull ?? [];
 
     return Scaffold(
       appBar: AppBar(
@@ -80,7 +81,7 @@ class HomeScreen extends ConsumerWidget {
                 final category = CardCategory.values[index];
                 final benefitCount = userCards.isEmpty
                     ? 0
-                    : userCards.where((card) => sampleBenefits.any(
+                    : userCards.where((card) => benefits.any(
                         (b) => b.cardId == card.id && b.category == category,
                       )).length;
                 return _CategoryCard(
