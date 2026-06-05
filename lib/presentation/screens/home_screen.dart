@@ -19,6 +19,11 @@ class HomeScreen extends ConsumerWidget {
         centerTitle: false,
         actions: [
           IconButton(
+            icon: const Icon(Icons.map_outlined),
+            tooltip: '주변 지도',
+            onPressed: () => context.push('/map'),
+          ),
+          IconButton(
             icon: const Icon(Icons.search),
             tooltip: '업체 검색',
             onPressed: () => context.push('/search'),
