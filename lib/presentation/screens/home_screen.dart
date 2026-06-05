@@ -18,6 +18,11 @@ class HomeScreen extends ConsumerWidget {
         centerTitle: false,
         actions: [
           IconButton(
+            icon: const Icon(Icons.search),
+            tooltip: '업체 검색',
+            onPressed: () => context.push('/search'),
+          ),
+          IconButton(
             icon: const Icon(Icons.credit_card),
             tooltip: '내 카드 관리',
             onPressed: () => context.push('/my-cards'),

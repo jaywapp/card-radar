@@ -5,6 +5,7 @@ import 'package:card_radar/presentation/screens/onboarding_screen.dart';
 import 'package:card_radar/presentation/screens/home_screen.dart';
 import 'package:card_radar/presentation/screens/ranking_screen.dart';
 import 'package:card_radar/presentation/screens/my_cards_screen.dart';
+import 'package:card_radar/presentation/screens/search_screen.dart';
 
 final appRouter = GoRouter(
   redirect: (context, state) {
@@ -28,5 +29,6 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(path: '/my-cards', builder: (_, __) => const MyCardsScreen()),
+    GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
   ],
 );
