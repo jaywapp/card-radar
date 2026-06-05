@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Card Radar — Logo Concepts</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1117; color: #e0e6f0; font-family: 'Segoe UI', sans-serif; padding: 40px 20px; }
+  h1 { text-align: center; font-size: 28px; margin-bottom: 8px; color: #90caf9; }
+  .subtitle { text-align: center; color: #607d8b; margin-bottom: 48px; font-size: 14px; }
+  .grid { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
+  .card { background: #1a1e2e; border-radius: 20px; padding: 40px 32px 32px; width: 320px;
+          border: 1px solid #2a3050; text-align: center; }
+  .card h2 { font-size: 18px; margin-bottom: 6px; color: #90caf9; }
+  .card p { font-size: 13px; color: #607d8b; margin-bottom: 28px; line-height: 1.5; }
+  .svg-wrap { display: flex; justify-content: center; align-items: center; height: 200px;
+              background: #12151f; border-radius: 16px; margin-bottom: 24px; }
+  .vote { display: flex; gap: 12px; justify-content: center; }
+  .vote button { padding: 8px 20px; border-radius: 999px; border: 1.5px solid #1565c0;
+                 background: transparent; color: #90caf9; cursor: pointer; font-size: 13px; }
+  .vote button:hover { background: #1565c0; color: white; }
+  .vote button.pick { background: #1565c0; color: white; }
+  .legend { text-align: center; margin-top: 48px; color: #455a64; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Card Radar</h1>
+<p class="subtitle">Logo Concepts — 카드 여러장 중 한장을 뽑는 형상</p>
+
+<div class="grid">
+
+  <!-- Concept A: Fan Pick -->
+  <div class="card">
+    <h2>A. Fan Pick</h2>
+    <p>부채꼴로 펼쳐진 카드들 중 한 장이 위로 솟아오르며 선택되는 순간</p>
+    <div class="svg-wrap">
+      <svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shadow cards — fanned left -->
+        <!-- Far left card -->
+        <g transform="translate(80,100) rotate(-32) translate(-80,-100)">
+          <rect x="42" y="62" width="54" height="76" rx="7" fill="#1a2744" stroke="#263566" stroke-width="1.5"/>
+          <rect x="48" y="68" width="18" height="12" rx="3" fill="#1e3a7a" opacity="0.7"/>
+          <line x1="48" y1="90" x2="90" y2="90" stroke="#263566" stroke-width="1.5"/>
+          <line x1="48" y1="98" x2="82" y2="98" stroke="#263566" stroke-width="1.5"/>
+        </g>
+        <!-- Middle-left card -->
+        <g transform="translate(80,100) rotate(-16) translate(-80,-100)">
+          <rect x="44" y="60" width="54" height="76" rx="7" fill="#1e2e5a" stroke="#2d4080" stroke-width="1.5"/>
+          <rect x="50" y="66" width="18" height="12" rx="3" fill="#2446a0" opacity="0.7"/>
+          <line x1="50" y1="88" x2="92" y2="88" stroke="#2d4080" stroke-width="1.5"/>
+          <line x1="50" y1="96" x2="84" y2="96" stroke="#2d4080" stroke-width="1.5"/>
+        </g>
+        <!-- Right back card -->
+        <g transform="translate(80,100) rotate(20) translate(-80,-100)">
+          <rect x="44" y="60" width="54" height="76" rx="7" fill="#1a2744" stroke="#263566" stroke-width="1.5"/>
+          <rect x="50" y="66" width="18" height="12" rx="3" fill="#1e3a7a" opacity="0.7"/>
+        </g>
+        <!-- Selected card — risen, center -->
+        <g filter="url(#glow)">
+          <rect x="47" y="28" width="60" height="84" rx="8" fill="url(#cardGrad)" stroke="#42a5f5" stroke-width="2"/>
+          <!-- Chip -->
+          <rect x="55" y="40" width="22" height="16" rx="4" fill="#ffd54f" opacity="0.9"/>
+          <rect x="58" y="44" width="16" height="2" rx="1" fill="#f9a825"/>
+          <rect x="58" y="48" width="16" height="2" rx="1" fill="#f9a825"/>
+          <!-- Signal lines emanating -->
+          <path d="M77 36 Q82 32 87 36" stroke="#64b5f6" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M77 33 Q85 27 93 33" stroke="#42a5f5" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <!-- Card number dots -->
+          <circle cx="57" cy="74" r="2" fill="#90caf9" opacity="0.6"/>
+          <circle cx="63" cy="74" r="2" fill="#90caf9" opacity="0.6"/>
+          <circle cx="69" cy="74" r="2" fill="#90caf9" opacity="0.6"/>
+          <circle cx="78" cy="74" r="2" fill="#90caf9" opacity="0.6"/>
+          <circle cx="84" cy="74" r="2" fill="#90caf9" opacity="0.6"/>
+          <circle cx="90" cy="74" r="2" fill="#90caf9" opacity="0.6"/>
+          <!-- Name line -->
+          <rect x="55" y="88" width="30" height="3" rx="1.5" fill="#90caf9" opacity="0.4"/>
+          <!-- Arrow pointing up -->
+          <path d="M77 26 L77 20 M74 23 L77 20 L80 23" stroke="#42a5f5" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <defs>
+          <linearGradient id="cardGrad" x1="47" y1="28" x2="107" y2="112" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#1565c0"/>
+            <stop offset="100%" stop-color="#0d47a1"/>
+          </linearGradient>
+          <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+    <div class="vote">
+      <button class="pick" onclick="select('A')">선택</button>
+      <button onclick="select('A-mod')">수정 후 선택</button>
+    </div>
+  </div>
+
+  <!-- Concept B: Radar Beam -->
+  <div class="card">
+    <h2>B. Radar Beam</h2>
+    <p>레이더가 카드들을 스캔해 최적 카드를 탐지하는 SF 감성의 아이콘</p>
+    <div class="svg-wrap">
+      <svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background radar rings -->
+        <circle cx="80" cy="88" r="60" stroke="#1a2a50" stroke-width="1" fill="none"/>
+        <circle cx="80" cy="88" r="44" stroke="#1a2a50" stroke-width="1" fill="none"/>
+        <circle cx="80" cy="88" r="28" stroke="#1a2a50" stroke-width="1" fill="none"/>
+        <!-- Cross hairs -->
+        <line x1="80" y1="28" x2="80" y2="148" stroke="#1a2a50" stroke-width="1"/>
+        <line x1="20" y1="88" x2="140" y2="88" stroke="#1a2a50" stroke-width="1"/>
+        <!-- Radar sweep arc -->
+        <path d="M80 88 L80 30 A58 58 0 0 1 128 112 Z" fill="url(#radarSwp)" opacity="0.25"/>
+        <!-- Radar beam line -->
+        <line x1="80" y1="88" x2="126" y2="64" stroke="#42a5f5" stroke-width="2" opacity="0.8"/>
+        <!-- Cards being scanned -->
+        <!-- Card 1 — detected (glowing) -->
+        <g>
+          <rect x="95" y="42" width="34" height="48" rx="5" fill="url(#cg2)" stroke="#42a5f5" stroke-width="1.5"/>
+          <rect x="99" y="47" width="12" height="9" rx="2" fill="#ffd54f" opacity="0.8"/>
+          <rect x="99" y="62" width="22" height="2" rx="1" fill="#90caf9" opacity="0.5"/>
+          <rect x="99" y="66" width="16" height="2" rx="1" fill="#90caf9" opacity="0.5"/>
+          <!-- Detected indicator -->
+          <circle cx="129" cy="42" r="5" fill="#42a5f5"/>
+          <path d="M126.5 42 L128 43.5 L131.5 40" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- Card 2 — undetected (dim) -->
+        <rect x="28" y="55" width="30" height="42" rx="5" fill="#1a2744" stroke="#263566" stroke-width="1.5" opacity="0.6"/>
+        <rect x="32" y="60" width="10" height="8" rx="2" fill="#263566" opacity="0.6"/>
+        <!-- Card 3 — partial (being scanned) -->
+        <rect x="50" y="100" width="28" height="38" rx="5" fill="#1e2e5a" stroke="#2d4080" stroke-width="1.5" opacity="0.7"/>
+        <rect x="54" y="105" width="10" height="7" rx="2" fill="#2446a0" opacity="0.6"/>
+        <!-- Center dot -->
+        <circle cx="80" cy="88" r="4" fill="#1565c0" stroke="#42a5f5" stroke-width="1.5"/>
+        <defs>
+          <linearGradient id="cg2" x1="95" y1="42" x2="129" y2="90" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#1565c0"/>
+            <stop offset="100%" stop-color="#0d47a1"/>
+          </linearGradient>
+          <radialGradient id="radarSwp" cx="80" cy="88" r="60" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#42a5f5" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#42a5f5" stop-opacity="0.6"/>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="vote">
+      <button onclick="select('B')">선택</button>
+      <button onclick="select('B-mod')">수정 후 선택</button>
+    </div>
+  </div>
+
+  <!-- Concept C: Stack Lift -->
+  <div class="card">
+    <h2>C. Stack Lift</h2>
+    <p>쌓인 카드 더미에서 한 장이 살짝 들려올라 빛나는 순간을 정면에서 포착</p>
+    <div class="svg-wrap">
+      <svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shadow stack at bottom -->
+        <rect x="36" y="110" width="88" height="5" rx="2.5" fill="#0a0f1a" opacity="0.5"/>
+        <!-- Card 4 (deepest) -->
+        <rect x="32" y="96" width="96" height="62" rx="9" fill="#0d1526" stroke="#1a2540" stroke-width="1.5"/>
+        <!-- Card 3 -->
+        <rect x="29" y="90" width="96" height="62" rx="9" fill="#111d36" stroke="#1e2e50" stroke-width="1.5"/>
+        <!-- Card 2 -->
+        <rect x="26" y="84" width="96" height="62" rx="9" fill="#162040" stroke="#243570" stroke-width="1.5"/>
+        <rect x="34" y="92" width="18" height="12" rx="3" fill="#1a2e60"/>
+        <!-- Card 1 (lifted — selected) -->
+        <g filter="url(#liftGlow)">
+          <rect x="22" y="46" width="116" height="74" rx="10" fill="url(#liftGrad)" stroke="#42a5f5" stroke-width="2.5"/>
+          <!-- Chip -->
+          <rect x="34" y="60" width="26" height="18" rx="5" fill="url(#chipGrad)"/>
+          <line x1="34" y1="66" x2="60" y2="66" stroke="#b8860b" stroke-width="1"/>
+          <line x1="34" y1="70" x2="60" y2="70" stroke="#b8860b" stroke-width="1"/>
+          <line x1="46" y1="60" x2="46" y2="78" stroke="#b8860b" stroke-width="1"/>
+          <!-- Contactless icon -->
+          <path d="M100 64 Q104 68 100 72" stroke="#90caf9" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M104 61 Q110 68 104 75" stroke="#90caf9" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M108 58 Q116 68 108 78" stroke="#42a5f5" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4"/>
+          <!-- Number dots -->
+          <circle cx="34" cy="96" r="2.5" fill="#90caf9" opacity="0.7"/>
+          <circle cx="41" cy="96" r="2.5" fill="#90caf9" opacity="0.7"/>
+          <circle cx="48" cy="96" r="2.5" fill="#90caf9" opacity="0.7"/>
+          <circle cx="55" cy="96" r="2.5" fill="#90caf9" opacity="0.7"/>
+          <circle cx="66" cy="96" r="2.5" fill="#90caf9" opacity="0.5"/>
+          <circle cx="73" cy="96" r="2.5" fill="#90caf9" opacity="0.5"/>
+          <circle cx="80" cy="96" r="2.5" fill="#90caf9" opacity="0.5"/>
+          <circle cx="87" cy="96" r="2.5" fill="#90caf9" opacity="0.5"/>
+          <!-- Name line -->
+          <rect x="34" y="108" width="50" height="3" rx="1.5" fill="#90caf9" opacity="0.4"/>
+          <!-- Expiry line -->
+          <rect x="90" y="108" width="26" height="3" rx="1.5" fill="#90caf9" opacity="0.3"/>
+        </g>
+        <!-- Lift sparkles -->
+        <circle cx="22" cy="56" r="2" fill="#42a5f5" opacity="0.7"/>
+        <circle cx="138" cy="52" r="1.5" fill="#42a5f5" opacity="0.5"/>
+        <circle cx="130" cy="44" r="1" fill="#90caf9" opacity="0.6"/>
+        <circle cx="30" cy="44" r="1.5" fill="#90caf9" opacity="0.5"/>
+        <defs>
+          <linearGradient id="liftGrad" x1="22" y1="46" x2="138" y2="120" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#1976d2"/>
+            <stop offset="100%" stop-color="#0d47a1"/>
+          </linearGradient>
+          <linearGradient id="chipGrad" x1="34" y1="60" x2="60" y2="78" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ffd54f"/>
+            <stop offset="100%" stop-color="#f9a825"/>
+          </linearGradient>
+          <filter id="liftGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+    <div class="vote">
+      <button onclick="select('C')">선택</button>
+      <button onclick="select('C-mod')">수정 후 선택</button>
+    </div>
+  </div>
+
+</div>
+
+<p class="legend" style="margin-top:48px">주 색상: #1565C0 (Deep Blue) · 강조: #42A5F5 (Light Blue) · 포인트: #FFD54F (Amber)</p>
+
+<div id="result" style="text-align:center;margin-top:32px;font-size:16px;color:#90caf9;min-height:28px"></div>
+
+<script>
+function select(id) {
+  document.getElementById('result').textContent = `✓ 선택: Concept ${id}`;
+}
+</script>
+</body>
+</html>

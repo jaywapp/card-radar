@@ -8,7 +8,7 @@
         </intent>
     </queries>
     <application
-        android:label="card_radar"
+        android:label="카드레이더"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
