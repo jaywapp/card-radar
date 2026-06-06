@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:card_radar/data/models/category.dart';
@@ -7,6 +8,7 @@ import 'package:card_radar/presentation/screens/ranking_screen.dart';
 import 'package:card_radar/presentation/screens/my_cards_screen.dart';
 import 'package:card_radar/presentation/screens/search_screen.dart';
 import 'package:card_radar/presentation/screens/map_screen.dart';
+import 'package:card_radar/presentation/widgets/feedback_fab.dart';
 
 final appRouter = GoRouter(
   redirect: (context, state) {
@@ -21,16 +23,40 @@ final appRouter = GoRouter(
   initialLocation: '/home',
   routes: [
     GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
-    GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
-    GoRoute(
-      path: '/ranking',
-      builder: (_, state) {
-        final category = state.extra as CardCategory;
-        return RankingScreen(category: category);
-      },
+    ShellRoute(
+      builder: (context, state, child) => _AppShell(child: child),
+      routes: [
+        GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+        GoRoute(
+          path: '/ranking',
+          builder: (_, state) {
+            final category = state.extra as CardCategory;
+            return RankingScreen(category: category);
+          },
+        ),
+        GoRoute(path: '/my-cards', builder: (_, __) => const MyCardsScreen()),
+        GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
+        GoRoute(path: '/map', builder: (_, __) => const MapScreen()),
+      ],
     ),
-    GoRoute(path: '/my-cards', builder: (_, __) => const MyCardsScreen()),
-    GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
-    GoRoute(path: '/map', builder: (_, __) => const MapScreen()),
   ],
 );
+
+class _AppShell extends StatelessWidget {
+  final Widget child;
+  const _AppShell({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        child,
+        Positioned(
+          left: 16,
+          bottom: MediaQuery.of(context).padding.bottom + 16,
+          child: const FeedbackFab(),
+        ),
+      ],
+    );
+  }
+}
