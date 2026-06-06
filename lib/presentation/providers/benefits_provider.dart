@@ -10,7 +10,8 @@ final benefitsProvider = FutureProvider<List<CardBenefit>>((ref) async {
   if (!supabaseConfigured) return sampleBenefits;
   try {
     final repo = CardBenefitRemoteRepository(Supabase.instance.client);
-    return await repo.fetchBenefits();
+    final benefits = await repo.fetchBenefits();
+    return benefits.isEmpty ? sampleBenefits : benefits;
   } catch (_) {
     return sampleBenefits;
   }
@@ -20,7 +21,8 @@ final remoteCardsProvider = FutureProvider<List<Card>>((ref) async {
   if (!supabaseConfigured) return sampleCards;
   try {
     final repo = CardBenefitRemoteRepository(Supabase.instance.client);
-    return await repo.fetchCards();
+    final cards = await repo.fetchCards();
+    return cards.isEmpty ? sampleCards : cards;
   } catch (_) {
     return sampleCards;
   }

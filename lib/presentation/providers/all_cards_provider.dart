@@ -9,7 +9,8 @@ final allCardsProvider = FutureProvider<List<Card>>((ref) async {
   if (!supabaseConfigured) return sampleCards;
   try {
     final repo = CardBenefitRemoteRepository(Supabase.instance.client);
-    return await repo.fetchCards();
+    final cards = await repo.fetchCards();
+    return cards.isEmpty ? sampleCards : cards;
   } catch (_) {
     return sampleCards;
   }
