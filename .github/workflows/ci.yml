@@ -25,6 +25,12 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Create github_config.dart
+        run: |
+          cat > lib/core/github_config.dart << 'EOF'
+          const String githubIssueToken = '${{ secrets.GITHUB_ISSUE_TOKEN }}';
+          EOF
+
       - name: Create kftc_config.dart
         run: |
           cat > lib/core/kftc_config.dart << 'EOF'

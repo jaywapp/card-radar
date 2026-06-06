@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:card_radar/presentation/providers/kftc_import_provider.dart';
 import 'package:card_radar/presentation/router.dart';
+import 'package:card_radar/presentation/widgets/feedback_fab.dart';
 
 class CardRadarApp extends ConsumerStatefulWidget {
   const CardRadarApp({super.key});
@@ -44,11 +45,33 @@ class _CardRadarAppState extends ConsumerState<CardRadarApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: '카드레이더',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0)),
-        useMaterial3: true,
-      ),
+      theme: _lightTheme(),
+      darkTheme: _darkTheme(),
+      themeMode: ThemeMode.system,
       routerConfig: appRouter,
+      builder: (context, child) => Stack(
+        children: [
+          child!,
+          Positioned(
+            left: 16,
+            bottom: MediaQuery.of(context).padding.bottom + 16,
+            child: const FeedbackFab(),
+          ),
+        ],
+      ),
     );
   }
 }
+
+ThemeData _lightTheme() => ThemeData(
+      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0)),
+      useMaterial3: true,
+    );
+
+ThemeData _darkTheme() => ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF1565C0),
+        brightness: Brightness.dark,
+      ),
+      useMaterial3: true,
+    );

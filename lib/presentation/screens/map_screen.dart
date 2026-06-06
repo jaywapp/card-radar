@@ -76,27 +76,31 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   PreferredSizeWidget _buildSearchBar() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final onPrimary = colorScheme.onPrimary;
     return AppBar(
+      backgroundColor: colorScheme.primary,
       title: TextField(
         controller: _searchController,
         decoration: InputDecoration(
           hintText: '업체명 검색 (예: 스타벅스, GS25)',
           border: InputBorder.none,
-          hintStyle: const TextStyle(color: Colors.white60),
+          hintStyle: TextStyle(color: onPrimary.withValues(alpha: 0.6)),
           suffixIcon: _suggestions.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
+                  icon: Icon(Icons.close, color: onPrimary),
                   onPressed: _clearSearch,
                 )
               : IconButton(
-                  icon: const Icon(Icons.search, color: Colors.white),
+                  icon: Icon(Icons.search, color: onPrimary),
                   onPressed: () => _onSearch(_searchController.text),
                 ),
         ),
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: onPrimary),
         onChanged: _onSearchChanged,
         onSubmitted: _onSearch,
       ),
+      iconTheme: IconThemeData(color: onPrimary),
     );
   }
 
