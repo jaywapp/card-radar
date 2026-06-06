@@ -27,6 +27,15 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Create kftc_config.dart from secrets
+        run: |
+          cat > lib/core/kftc_config.dart << 'EOF'
+          const String kftcClientId = '${{ secrets.KFTC_CLIENT_ID }}';
+          const String kftcClientSecret = '${{ secrets.KFTC_CLIENT_SECRET }}';
+          const String kftcRedirectUri = 'https://kmgoanbulmxmeuzmxmnv.supabase.co/functions/v1/kftc-callback';
+          const String kftcBaseUrl = 'https://testapi.openbanking.or.kr';
+          EOF
+
       - name: Get dependencies
         run: flutter pub get
 
