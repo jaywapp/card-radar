@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:card_radar/core/merchant_categories.dart';
 import 'package:card_radar/core/naver_map_config.dart';
 import 'package:card_radar/data/models/category.dart';
-import 'package:card_radar/domain/usecases/card_ranking_usecase.dart';
-import 'package:card_radar/presentation/providers/benefits_provider.dart';
-import 'package:card_radar/presentation/providers/user_cards_provider.dart';
+import 'package:card_radar/presentation/widgets/merchant_card_sheet.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -44,80 +41,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       );
       return;
     }
-    _showMiniRanking(category);
+    showMerchantCardSheet(context, merchantName: q, category: category);
   }
 
   void _clearSearch() {
     _searchController.clear();
     FocusScope.of(context).unfocus();
     setState(() => _suggestions = []);
-  }
-
-  void _showMiniRanking(CardCategory category) {
-    final userCards = ref.read(userCardsProvider);
-    final benefits = ref.read(benefitsProvider).valueOrNull ?? [];
-    final ranked = CardRankingUseCase()
-        .rank(category: category, userCards: userCards, allBenefits: benefits)
-        .where((r) => r.hasBenefit)
-        .take(3)
-        .toList();
-
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
-              child: Row(
-                children: [
-                  Text(
-                    '${category.emoji} ${category.label} 추천 카드',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      context.push('/ranking', extra: category);
-                    },
-                    child: const Text('전체보기'),
-                  ),
-                ],
-              ),
-            ),
-            if (userCards.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('카드를 먼저 등록해 주세요'),
-              )
-            else if (ranked.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text('이 카테고리에 혜택 있는 카드가 없어요'),
-              )
-            else
-              ...ranked.asMap().entries.map((e) {
-                final item = e.value;
-                final typeLabel =
-                    item.benefit!.benefitType == 'cashback' ? '캐시백' : '포인트';
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    child: Text('${e.key + 1}'),
-                  ),
-                  title: Text(item.card.name),
-                  subtitle: Text('$typeLabel ${item.benefit!.rate}%'),
-                );
-              }),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
   }
 
   void _showCategoryPicker() {
@@ -136,7 +66,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 title: Text(cat.label),
                 onTap: () {
                   Navigator.pop(ctx);
-                  _showMiniRanking(cat);
+                  showMerchantCardSheet(context,
+                      merchantName: null, category: cat);
                 },
               )),
         ],
