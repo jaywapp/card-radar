@@ -18,6 +18,7 @@ class MapScreen extends ConsumerStatefulWidget {
 
 class _MapScreenState extends ConsumerState<MapScreen> {
   final _searchController = TextEditingController();
+  List<MapEntry<String, CardCategory>> _suggestions = [];
 
   @override
   void dispose() {
@@ -25,8 +26,16 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     super.dispose();
   }
 
+  void _onSearchChanged(String query) {
+    final results = searchMerchants(query);
+    setState(() {
+      _suggestions = results.take(6).toList();
+    });
+  }
+
   void _onSearch(String query) {
     final q = query.trim();
+    _clearSearch();
     if (q.isEmpty) return;
     final category = findCategory(q);
     if (category == null) {
@@ -36,6 +45,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       return;
     }
     _showMiniRanking(category);
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    FocusScope.of(context).unfocus();
+    setState(() => _suggestions = []);
   }
 
   void _showMiniRanking(CardCategory category) {
@@ -137,13 +152,49 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           hintText: '업체명 검색 (예: 스타벅스, GS25)',
           border: InputBorder.none,
           hintStyle: const TextStyle(color: Colors.white60),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () => _onSearch(_searchController.text),
-          ),
+          suffixIcon: _suggestions.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: _clearSearch,
+                )
+              : IconButton(
+                  icon: const Icon(Icons.search, color: Colors.white),
+                  onPressed: () => _onSearch(_searchController.text),
+                ),
         ),
         style: const TextStyle(color: Colors.white),
+        onChanged: _onSearchChanged,
         onSubmitted: _onSearch,
+      ),
+    );
+  }
+
+  Widget _buildSuggestions() {
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: Material(
+        elevation: 8,
+        child: ListView.builder(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          itemCount: _suggestions.length,
+          itemBuilder: (context, index) {
+            final entry = _suggestions[index];
+            return ListTile(
+              dense: true,
+              leading: Text(entry.value.emoji,
+                  style: const TextStyle(fontSize: 20)),
+              title: Text(entry.key),
+              trailing: Text(entry.value.label,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 12)),
+              onTap: () => _onSearch(entry.key),
+            );
+          },
+        ),
       ),
     );
   }
@@ -152,12 +203,19 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildSearchBar(),
-      body: naverMapsConfigured ? _buildMap() : _buildPlaceholder(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showCategoryPicker,
-        tooltip: '카테고리로 찾기',
-        child: const Icon(Icons.credit_card),
+      body: Stack(
+        children: [
+          naverMapsConfigured ? _buildMap() : _buildPlaceholder(),
+          if (_suggestions.isNotEmpty) _buildSuggestions(),
+        ],
       ),
+      floatingActionButton: _suggestions.isEmpty
+          ? FloatingActionButton(
+              onPressed: _showCategoryPicker,
+              tooltip: '카테고리로 찾기',
+              child: const Icon(Icons.credit_card),
+            )
+          : null,
     );
   }
 
