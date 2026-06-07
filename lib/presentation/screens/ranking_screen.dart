@@ -8,27 +8,39 @@ import 'package:card_radar/presentation/widgets/card_rank_item.dart';
 
 class RankingScreen extends ConsumerWidget {
   final CardCategory category;
-  const RankingScreen({super.key, required this.category});
+  final String? merchantKey;
+  final String? merchantName;
+
+  const RankingScreen({
+    super.key,
+    required this.category,
+    this.merchantKey,
+    this.merchantName,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userCards = ref.watch(userCardsProvider);
     final benefitsAsync = ref.watch(benefitsProvider);
 
+    final title = merchantName != null
+        ? '$merchantName (${category.label})'
+        : '${category.emoji} ${category.label}';
+
     if (userCards.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: Text('${category.emoji} ${category.label}')),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: Text('내 카드를 먼저 등록해 주세요')),
       );
     }
 
     return benefitsAsync.when(
       loading: () => Scaffold(
-        appBar: AppBar(title: Text('${category.emoji} ${category.label}')),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: CircularProgressIndicator()),
       ),
       error: (_, __) => Scaffold(
-        appBar: AppBar(title: Text('${category.emoji} ${category.label}')),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: Text('데이터를 불러올 수 없습니다')),
       ),
       data: (benefits) {
@@ -37,11 +49,12 @@ class RankingScreen extends ConsumerWidget {
           category: category,
           userCards: userCards,
           allBenefits: benefits,
+          merchantKey: merchantKey,
         );
         int rank = 1;
         return Scaffold(
           appBar: AppBar(
-            title: Text('${category.emoji} ${category.label}'),
+            title: Text(title),
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(20),
               child: Padding(

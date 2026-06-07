@@ -77,8 +77,8 @@ const List<CardBenefit> sampleBenefits = [
   CardBenefit(cardId: 'shinhan-mrlife', category: CardCategory.pharmacy, benefitType: 'cashback', rate: 3.0),
   CardBenefit(cardId: 'shinhan-mrlife', category: CardCategory.cafe, benefitType: 'cashback', rate: 2.0),
 
-  // 현대카드 ZERO
-  CardBenefit(cardId: 'hyundai-zero', category: CardCategory.gasStation, benefitType: 'cashback', rate: 5.0),
+  // 현대카드 ZERO — 주유소는 SK·GS칼텍스 한정
+  CardBenefit(cardId: 'hyundai-zero', category: CardCategory.gasStation, benefitType: 'cashback', rate: 5.0, merchants: ['sk주유소', 'gs칼텍스']),
   CardBenefit(cardId: 'hyundai-zero', category: CardCategory.transit, benefitType: 'cashback', rate: 3.0),
   CardBenefit(cardId: 'hyundai-zero', category: CardCategory.mart, benefitType: 'cashback', rate: 2.0),
 
@@ -97,9 +97,9 @@ const List<CardBenefit> sampleBenefits = [
   CardBenefit(cardId: 'kb-flex', category: CardCategory.online, benefitType: 'points', rate: 3.0),
   CardBenefit(cardId: 'kb-flex', category: CardCategory.cafe, benefitType: 'points', rate: 2.0),
 
-  // KB 탄탄대로
-  CardBenefit(cardId: 'kb-tantan', category: CardCategory.gasStation, benefitType: 'cashback', rate: 5.0),
-  CardBenefit(cardId: 'kb-tantan', category: CardCategory.convenience, benefitType: 'cashback', rate: 3.0),
+  // KB 탄탄대로 — 주유소 GS칼텍스 한정, 편의점 GS25 한정
+  CardBenefit(cardId: 'kb-tantan', category: CardCategory.gasStation, benefitType: 'cashback', rate: 5.0, merchants: ['gs칼텍스']),
+  CardBenefit(cardId: 'kb-tantan', category: CardCategory.convenience, benefitType: 'cashback', rate: 3.0, merchants: ['gs25']),
   CardBenefit(cardId: 'kb-tantan', category: CardCategory.transit, benefitType: 'cashback', rate: 2.0),
 
   // KB 노리
@@ -122,9 +122,9 @@ const List<CardBenefit> sampleBenefits = [
   CardBenefit(cardId: 'samsung-7', category: CardCategory.restaurant, benefitType: 'cashback', rate: 3.0),
   CardBenefit(cardId: 'samsung-7', category: CardCategory.pharmacy, benefitType: 'cashback', rate: 2.0),
 
-  // 롯데 DC PLUS
+  // 롯데 DC PLUS — 마트는 롯데마트 한정
   CardBenefit(cardId: 'lotte-dc-plus', category: CardCategory.restaurant, benefitType: 'cashback', rate: 4.0),
-  CardBenefit(cardId: 'lotte-dc-plus', category: CardCategory.mart, benefitType: 'cashback', rate: 4.0),
+  CardBenefit(cardId: 'lotte-dc-plus', category: CardCategory.mart, benefitType: 'cashback', rate: 4.0, merchants: ['롯데마트']),
   CardBenefit(cardId: 'lotte-dc-plus', category: CardCategory.cafe, benefitType: 'cashback', rate: 2.0),
 
   // 롯데 LIKIT
@@ -152,18 +152,18 @@ const List<CardBenefit> sampleBenefits = [
   CardBenefit(cardId: 'hana-moa', category: CardCategory.cafe, benefitType: 'cashback', rate: 4.0),
   CardBenefit(cardId: 'hana-moa', category: CardCategory.transit, benefitType: 'cashback', rate: 2.0),
 
-  // NH 올원 FLEX
-  CardBenefit(cardId: 'nh-all', category: CardCategory.convenience, benefitType: 'cashback', rate: 5.0),
+  // NH 올원 FLEX — 편의점 CU 한정
+  CardBenefit(cardId: 'nh-all', category: CardCategory.convenience, benefitType: 'cashback', rate: 5.0, merchants: ['cu']),
   CardBenefit(cardId: 'nh-all', category: CardCategory.cafe, benefitType: 'cashback', rate: 3.0),
   CardBenefit(cardId: 'nh-all', category: CardCategory.transit, benefitType: 'cashback', rate: 2.0),
 
-  // 신한 Deep Oil
-  CardBenefit(cardId: 'shinhan-deep-oil', category: CardCategory.gasStation, benefitType: 'cashback', rate: 7.0),
+  // 신한 Deep Oil — SK주유소 한정
+  CardBenefit(cardId: 'shinhan-deep-oil', category: CardCategory.gasStation, benefitType: 'cashback', rate: 7.0, merchants: ['sk주유소']),
   CardBenefit(cardId: 'shinhan-deep-oil', category: CardCategory.convenience, benefitType: 'cashback', rate: 2.0),
   CardBenefit(cardId: 'shinhan-deep-oil', category: CardCategory.transit, benefitType: 'cashback', rate: 2.0),
 
-  // 현대카드 Z
-  CardBenefit(cardId: 'hyundai-z', category: CardCategory.gasStation, benefitType: 'cashback', rate: 7.0),
+  // 현대카드 Z — 주유소 SK·현대오일뱅크 한정
+  CardBenefit(cardId: 'hyundai-z', category: CardCategory.gasStation, benefitType: 'cashback', rate: 7.0, merchants: ['sk주유소', '현대오일뱅크']),
   CardBenefit(cardId: 'hyundai-z', category: CardCategory.transit, benefitType: 'cashback', rate: 5.0),
   CardBenefit(cardId: 'hyundai-z', category: CardCategory.online, benefitType: 'cashback', rate: 3.0),
 
@@ -172,8 +172,8 @@ const List<CardBenefit> sampleBenefits = [
   CardBenefit(cardId: 'hyundai-x', category: CardCategory.restaurant, benefitType: 'cashback', rate: 3.0),
   CardBenefit(cardId: 'hyundai-x', category: CardCategory.convenience, benefitType: 'cashback', rate: 2.0),
 
-  // KB MY WE:SH
-  CardBenefit(cardId: 'kb-my-wesh', category: CardCategory.convenience, benefitType: 'cashback', rate: 5.0),
+  // KB MY WE:SH — 편의점 GS25·이마트24 한정
+  CardBenefit(cardId: 'kb-my-wesh', category: CardCategory.convenience, benefitType: 'cashback', rate: 5.0, merchants: ['gs25', '이마트24']),
   CardBenefit(cardId: 'kb-my-wesh', category: CardCategory.cafe, benefitType: 'cashback', rate: 3.0),
   CardBenefit(cardId: 'kb-my-wesh', category: CardCategory.transit, benefitType: 'cashback', rate: 3.0),
 

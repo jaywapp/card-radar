@@ -6,6 +6,7 @@ import 'package:card_radar/core/sample_data.dart';
 import 'package:card_radar/data/models/card.dart' as app;
 import 'package:card_radar/data/models/card_benefit.dart';
 import 'package:card_radar/data/models/category.dart';
+import 'package:card_radar/data/models/ranking_args.dart';
 import 'package:card_radar/domain/entities/ranked_card.dart';
 import 'package:card_radar/domain/usecases/card_ranking_usecase.dart';
 import 'package:card_radar/presentation/providers/all_cards_provider.dart';
@@ -16,6 +17,7 @@ void showMerchantCardSheet(
   BuildContext context, {
   required String? merchantName,
   required CardCategory category,
+  String? merchantKey,
 }) {
   showModalBottomSheet<void>(
     context: context,
@@ -32,6 +34,7 @@ void showMerchantCardSheet(
       builder: (_, scrollController) => _SheetBody(
         merchantName: merchantName,
         category: category,
+        merchantKey: merchantKey,
         scrollController: scrollController,
       ),
     ),
@@ -41,12 +44,14 @@ void showMerchantCardSheet(
 class _SheetBody extends ConsumerWidget {
   final String? merchantName;
   final CardCategory category;
+  final String? merchantKey;
   final ScrollController scrollController;
 
   const _SheetBody({
     required this.merchantName,
     required this.category,
     required this.scrollController,
+    this.merchantKey,
   });
 
   @override
@@ -59,6 +64,7 @@ class _SheetBody extends ConsumerWidget {
       category: category,
       userCards: userCards,
       allBenefits: benefits,
+      merchantKey: merchantKey,
     );
 
     final userCardIds = userCards.map((c) => c.id).toSet();
@@ -85,7 +91,11 @@ class _SheetBody extends ConsumerWidget {
               child: TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  context.push('/ranking', extra: category);
+                  context.push('/ranking', extra: RankingArgs(
+                    category: category,
+                    merchantKey: merchantKey,
+                    merchantName: merchantName,
+                  ));
                 },
                 child: const Text('전체 보기'),
               ),
@@ -109,7 +119,13 @@ class _SheetBody extends ConsumerWidget {
     for (final card in all) {
       if (userIds.contains(card.id)) continue;
       final best = benefits
-          .where((b) => b.cardId == card.id && b.category == category)
+          .where((b) {
+            if (b.cardId != card.id || b.category != category) return false;
+            if (merchantKey != null && b.merchants != null) {
+              return b.merchants!.contains(merchantKey);
+            }
+            return true;
+          })
           .fold<CardBenefit?>(
               null, (b, e) => b == null || e.rate > b.rate ? e : b);
       if (best != null) result.add((card, best));

@@ -8,6 +8,7 @@ class CardRankingUseCase {
     required CardCategory category,
     required List<Card> userCards,
     required List<CardBenefit> allBenefits,
+    String? merchantKey,
   }) {
     if (userCards.isEmpty) return [];
 
@@ -16,7 +17,7 @@ class CardRankingUseCase {
 
     for (final card in userCards) {
       final benefit = allBenefits
-          .where((b) => b.cardId == card.id && b.category == category)
+          .where((b) => _matches(b, card.id, category, merchantKey))
           .fold<CardBenefit?>(
               null, (best, b) => best == null || b.rate > best.rate ? b : best);
 
@@ -29,5 +30,13 @@ class CardRankingUseCase {
 
     withBenefit.sort((a, b) => b.benefit!.rate.compareTo(a.benefit!.rate));
     return [...withBenefit, ...withoutBenefit];
+  }
+
+  bool _matches(CardBenefit b, String cardId, CardCategory category, String? merchantKey) {
+    if (b.cardId != cardId || b.category != category) return false;
+    if (merchantKey != null && b.merchants != null) {
+      return b.merchants!.contains(merchantKey);
+    }
+    return true;
   }
 }

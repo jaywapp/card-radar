@@ -50,7 +50,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     if (q.isEmpty) return;
     final category = findCategory(q);
     if (category != null) {
-      showMerchantCardSheet(context, merchantName: q, category: category);
+      showMerchantCardSheet(
+        context,
+        merchantName: q,
+        category: category,
+        merchantKey: findMerchantKey(q),
+      );
     } else {
       // 매칭 실패 시 카테고리 직접 선택으로 fallback
       _showCategoryPicker();
@@ -118,7 +123,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
     final category = findCategory(name);
     if (category != null) {
-      showMerchantCardSheet(context, merchantName: name, category: category);
+      showMerchantCardSheet(
+        context,
+        merchantName: name,
+        category: category,
+        merchantKey: findMerchantKey(name),
+      );
     } else {
       _showCategoryPicker(merchantName: name);
     }

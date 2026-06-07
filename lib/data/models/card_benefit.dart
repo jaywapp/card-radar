@@ -6,6 +6,7 @@ class CardBenefit {
   final String benefitType; // 'cashback' | 'points'
   final double rate;
   final String? conditions;
+  final List<String>? merchants; // null이면 업종 전체 적용
 
   const CardBenefit({
     required this.cardId,
@@ -13,5 +14,6 @@ class CardBenefit {
     required this.benefitType,
     required this.rate,
     this.conditions,
+    this.merchants,
   });
 }

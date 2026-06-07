@@ -32,6 +32,7 @@ class CardBenefitRemoteRepository {
         benefitType: r['benefit_type'] as String,
         rate: (r['rate'] as num).toDouble(),
         conditions: r['conditions'] as String?,
+        merchants: (r['merchants'] as List<dynamic>?)?.cast<String>(),
       );
     }).toList();
   }

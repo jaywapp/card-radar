@@ -111,6 +111,17 @@ const Map<String, CardCategory> merchantCategoryMap = {
   'cvs': CardCategory.pharmacy,
 };
 
+String? findMerchantKey(String query) {
+  final lower = query.toLowerCase().trim();
+  if (lower.isEmpty) return null;
+  for (final entry in merchantCategoryMap.entries) {
+    if (lower.contains(entry.key) || entry.key.contains(lower)) {
+      return entry.key;
+    }
+  }
+  return null;
+}
+
 CardCategory? findCategory(String query) {
   final lower = query.toLowerCase().trim();
   if (lower.isEmpty) return null;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:card_radar/core/merchant_categories.dart';
 import 'package:card_radar/data/models/category.dart';
+import 'package:card_radar/data/models/ranking_args.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -23,7 +24,11 @@ class _SearchScreenState extends State<SearchScreen> {
   void _onSubmit(String query) {
     final category = findCategory(query);
     if (category != null) {
-      context.push('/ranking', extra: category);
+      context.push('/ranking', extra: RankingArgs(
+        category: category,
+        merchantKey: findMerchantKey(query),
+        merchantName: query.trim(),
+      ));
     }
     // 매칭 실패 시 아무 동작 없음 — _buildNoResult의 카테고리 목록으로 안내
   }
@@ -78,7 +83,7 @@ class _SearchScreenState extends State<SearchScreen> {
               leading: Text(e.$2.emoji, style: const TextStyle(fontSize: 24)),
               title: Text(e.$1),
               subtitle: Text(e.$2.label),
-              onTap: () => context.push('/ranking', extra: e.$2),
+              onTap: () => context.push('/ranking', extra: RankingArgs(category: e.$2)),
             )),
         const Divider(height: 32),
         Padding(
@@ -129,7 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
       itemBuilder: (context, index) {
         final cat = CardCategory.values[index];
         return InkWell(
-          onTap: () => context.push('/ranking', extra: cat),
+          onTap: () => context.push('/ranking', extra: RankingArgs(category: cat)),
           borderRadius: BorderRadius.circular(12),
           child: Container(
             decoration: BoxDecoration(
@@ -165,7 +170,11 @@ class _SearchScreenState extends State<SearchScreen> {
           title: Text(entry.key),
           subtitle: Text(entry.value.label),
           trailing: const Icon(Icons.chevron_right),
-          onTap: () => context.push('/ranking', extra: entry.value),
+          onTap: () => context.push('/ranking', extra: RankingArgs(
+            category: entry.value,
+            merchantKey: entry.key,
+            merchantName: entry.key,
+          )),
         );
       },
     );

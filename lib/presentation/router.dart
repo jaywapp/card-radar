@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:card_radar/data/models/category.dart';
+import 'package:card_radar/data/models/ranking_args.dart';
 import 'package:card_radar/presentation/screens/onboarding_screen.dart';
 import 'package:card_radar/presentation/screens/home_screen.dart';
 import 'package:card_radar/presentation/screens/ranking_screen.dart';
@@ -30,8 +31,15 @@ final appRouter = GoRouter(
         GoRoute(
           path: '/ranking',
           builder: (_, state) {
-            final category = state.extra as CardCategory;
-            return RankingScreen(category: category);
+            final extra = state.extra;
+            if (extra is RankingArgs) {
+              return RankingScreen(
+                category: extra.category,
+                merchantKey: extra.merchantKey,
+                merchantName: extra.merchantName,
+              );
+            }
+            return RankingScreen(category: extra as CardCategory);
           },
         ),
         GoRoute(path: '/my-cards', builder: (_, __) => const MyCardsScreen()),
