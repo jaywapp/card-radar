@@ -46,6 +46,12 @@ app.*.map.json
 
 # Secrets
 .env
-.env.local
+.env.*
 lib/core/kftc_config.dart
 lib/core/github_config.dart
+
+# Supabase temp
+supabase/.temp/
+
+# Screenshots / local images
+images/
