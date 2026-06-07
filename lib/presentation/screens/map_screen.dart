@@ -63,29 +63,65 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     setState(() => _suggestions = []);
   }
 
-  void _showCategoryPicker() {
+  void _showCategoryPicker({String? merchantName}) {
     showModalBottomSheet<void>(
       context: context,
-      builder: (ctx) => ListView(
-        shrinkWrap: true,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('어떤 업종인가요?',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          ),
-          ...CardCategory.values.map((cat) => ListTile(
-                leading: Text(cat.emoji, style: const TextStyle(fontSize: 24)),
-                title: Text(cat.label),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  showMerchantCardSheet(context,
-                      merchantName: null, category: cat);
-                },
-              )),
-        ],
+      isScrollControlled: true,
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.4,
+        maxChildSize: 0.85,
+        expand: false,
+        builder: (_, sc) => ListView(
+          controller: sc,
+          children: [
+            if (merchantName != null) ...[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 2),
+                child: Text(merchantName,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Text('어떤 업종인가요?',
+                    style: TextStyle(color: Colors.grey)),
+              ),
+            ] else
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text('카테고리 선택',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16)),
+              ),
+            ...CardCategory.values.map((cat) => ListTile(
+                  leading:
+                      Text(cat.emoji, style: const TextStyle(fontSize: 24)),
+                  title: Text(cat.label),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    showMerchantCardSheet(context,
+                        merchantName: merchantName, category: cat);
+                  },
+                )),
+          ],
+        ),
       ),
     );
+  }
+
+  void _onSymbolTapped(NSymbolInfo symbol) {
+    final name = symbol.caption.trim();
+    if (name.isEmpty) {
+      _showCategoryPicker();
+      return;
+    }
+    final category = findCategory(name);
+    if (category != null) {
+      showMerchantCardSheet(context, merchantName: name, category: category);
+    } else {
+      _showCategoryPicker(merchantName: name);
+    }
   }
 
   PreferredSizeWidget _buildSearchBar() {
@@ -177,7 +213,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         locationButtonEnable: true,
       ),
       onMapReady: (controller) {},
-      onSymbolTapped: (symbol) => _showCategoryPicker(),
+      onSymbolTapped: _onSymbolTapped,
     );
   }
 
