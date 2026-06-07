@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:card_radar/domain/entities/ranked_card.dart';
+import 'package:card_radar/presentation/widgets/card_artwork.dart';
 
 class CardRankItem extends StatelessWidget {
   final RankedCard rankedCard;
@@ -29,19 +30,30 @@ class CardRankItem extends StatelessWidget {
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      leading: CircleAvatar(
-        backgroundColor: hasBenefit
-            ? Theme.of(context).colorScheme.primaryContainer
-            : Colors.grey.shade200,
-        child: Text(
-          hasBenefit ? '$rank' : '-',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: hasBenefit
-                ? Theme.of(context).colorScheme.onPrimaryContainer
-                : Colors.grey,
-          ),
-        ),
+      leading: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          CardArtwork(card: card, height: 44),
+          if (hasBenefit && rank > 0)
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    bottomRight: Radius.circular(4),
+                  ),
+                ),
+                child: Text(
+                  '$rank',
+                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+        ],
       ),
       title: Text(card.name, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(card.issuer, style: const TextStyle(fontSize: 12)),

@@ -15,6 +15,7 @@ class CardBenefitRemoteRepository {
           name: r['name'] as String,
           issuer: r['issuer'] as String,
           applyUrl: r['apply_url'] as String?,
+          imageUrl: r['image_url'] as String?,
         )).toList();
   }
 

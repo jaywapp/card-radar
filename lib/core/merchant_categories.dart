@@ -1,5 +1,66 @@
 import 'package:card_radar/data/models/category.dart';
 
+const Map<String, String> merchantDomainMap = {
+  // 편의점
+  'gs25': 'gs25.gsretail.com',
+  'cu': 'cu.bgfretail.com',
+  '씨유': 'cu.bgfretail.com',
+  '세븐일레븐': '7-eleven.co.kr',
+  '이마트24': 'emart24.co.kr',
+  '미니스톱': 'ministop.co.jp',
+  // 카페
+  '스타벅스': 'starbucks.com',
+  '투썸플레이스': 'twosome.co.kr',
+  '이디야': 'ediya.com',
+  '메가커피': 'mega-mgccoffee.com',
+  '컴포즈커피': 'composecoffee.com',
+  '빽다방': 'paik.co.kr',
+  '할리스': 'hollys.co.kr',
+  '블루보틀': 'bluebottlecoffee.com',
+  '커피빈': 'coffeebean.com',
+  // 식당
+  '맥도날드': 'mcdonalds.com',
+  '버거킹': 'burgerking.com',
+  '롯데리아': 'lotteria.com',
+  'kfc': 'kfc.com',
+  '맘스터치': 'momstouch.co.kr',
+  '배달의민족': 'baemin.com',
+  '배민': 'baemin.com',
+  '요기요': 'yogiyo.co.kr',
+  'bbq': 'bbqchicken.com',
+  '교촌치킨': 'kyochon.com',
+  '피자헛': 'pizzahut.com',
+  '도미노피자': 'dominos.com',
+  '써브웨이': 'subway.com',
+  '쉐이크쉑': 'shakeshack.com',
+  // 주유소
+  'sk주유소': 'skenergyplus.co.kr',
+  'gs칼텍스': 'gscaltex.co.kr',
+  '현대오일뱅크': 'oilbank.co.kr',
+  's-oil': 'soil.co.kr',
+  '에쓰오일': 'soil.co.kr',
+  // 온라인
+  '쿠팡': 'coupang.com',
+  '네이버쇼핑': 'shopping.naver.com',
+  'g마켓': 'gmarket.co.kr',
+  '지마켓': 'gmarket.co.kr',
+  '옥션': 'auction.co.kr',
+  '마켓컬리': 'kurly.com',
+  '무신사': 'musinsa.com',
+  '29cm': '29cm.co.kr',
+  // 마트
+  '이마트': 'emart.com',
+  '롯데마트': 'lottemart.com',
+  '홈플러스': 'homeplus.co.kr',
+  '코스트코': 'costco.com',
+  '트레이더스': 'emart.com',
+  // 약국·드럭스토어
+  '올리브영': 'oliveyoung.co.kr',
+  // 대중교통
+  '티머니': 'tmoney.co.kr',
+  '카카오택시': 'kakaomobility.com',
+};
+
 const Map<String, CardCategory> merchantCategoryMap = {
   // 편의점
   'gs25': CardCategory.convenience,

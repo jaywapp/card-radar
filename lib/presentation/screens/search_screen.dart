@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:card_radar/core/merchant_categories.dart';
 import 'package:card_radar/data/models/category.dart';
 import 'package:card_radar/data/models/ranking_args.dart';
+import 'package:card_radar/presentation/widgets/merchant_logo.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -165,8 +166,11 @@ class _SearchScreenState extends State<SearchScreen> {
       itemBuilder: (context, index) {
         final entry = _results[index];
         return ListTile(
-          leading: Text(entry.value.emoji,
-              style: const TextStyle(fontSize: 24)),
+          leading: MerchantLogo(
+            merchantKey: entry.key,
+            fallbackEmoji: entry.value.emoji,
+            size: 36,
+          ),
           title: Text(entry.key),
           subtitle: Text(entry.value.label),
           trailing: const Icon(Icons.chevron_right),

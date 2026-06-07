@@ -7,6 +7,8 @@ import 'package:card_radar/data/models/card.dart' as app;
 import 'package:card_radar/data/models/card_benefit.dart';
 import 'package:card_radar/data/models/category.dart';
 import 'package:card_radar/data/models/ranking_args.dart';
+import 'package:card_radar/presentation/widgets/card_artwork.dart';
+import 'package:card_radar/presentation/widgets/merchant_logo.dart';
 import 'package:card_radar/domain/entities/ranked_card.dart';
 import 'package:card_radar/domain/usecases/card_ranking_usecase.dart';
 import 'package:card_radar/presentation/providers/all_cards_provider.dart';
@@ -150,7 +152,11 @@ class _SheetBody extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
         child: Row(
           children: [
-            Text(category.emoji, style: const TextStyle(fontSize: 32)),
+            MerchantLogo(
+              merchantKey: merchantKey,
+              fallbackEmoji: category.emoji,
+              size: 48,
+            ),
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,19 +199,30 @@ class _SheetBody extends ConsumerWidget {
       tileColor: isTop
           ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.25)
           : null,
-      leading: CircleAvatar(
-        backgroundColor: item.hasBenefit
-            ? Theme.of(context).colorScheme.primaryContainer
-            : Colors.grey.shade200,
-        child: Text(
-          item.hasBenefit ? '$rank' : '-',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: item.hasBenefit
-                ? Theme.of(context).colorScheme.onPrimaryContainer
-                : Colors.grey,
-          ),
-        ),
+      leading: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          CardArtwork(card: item.card, height: 44),
+          if (item.hasBenefit)
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    bottomRight: Radius.circular(4),
+                  ),
+                ),
+                child: Text(
+                  '$rank',
+                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+        ],
       ),
       title: Row(
         children: [
@@ -245,10 +262,7 @@ class _SheetBody extends ConsumerWidget {
 
   Widget _suggestedCardTile(BuildContext context, app.Card card, CardBenefit benefit) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.orange.shade100,
-        child: const Icon(Icons.add_card, color: Colors.orange, size: 20),
-      ),
+      leading: CardArtwork(card: card, height: 44),
       title: Text(card.name,
           style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(card.issuer,
