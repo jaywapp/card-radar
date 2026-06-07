@@ -25,6 +25,7 @@ class _SearchScreenState extends State<SearchScreen> {
     if (category != null) {
       context.push('/ranking', extra: category);
     }
+    // 매칭 실패 시 아무 동작 없음 — _buildNoResult의 카테고리 목록으로 안내
   }
 
   @override
@@ -79,24 +80,77 @@ class _SearchScreenState extends State<SearchScreen> {
               subtitle: Text(e.$2.label),
               onTap: () => context.push('/ranking', extra: e.$2),
             )),
+        const Divider(height: 32),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: Text('업종별 찾기',
+              style: Theme.of(context).textTheme.labelLarge),
+        ),
+        _buildCategoryGrid(),
       ],
     );
   }
 
   Widget _buildNoResult() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('🔍', style: TextStyle(fontSize: 48)),
-          const SizedBox(height: 16),
-          Text('"${_controller.text}" 검색 결과 없음',
-              style: Theme.of(context).textTheme.bodyLarge),
-          const SizedBox(height: 8),
-          const Text('카테고리를 직접 선택해 주세요',
-              style: TextStyle(color: Colors.grey)),
-        ],
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+          child: Column(
+            children: [
+              const Text('🔍', style: TextStyle(fontSize: 48)),
+              const SizedBox(height: 12),
+              Text('"${_controller.text}" 검색 결과 없음',
+                  style: Theme.of(context).textTheme.bodyLarge),
+              const SizedBox(height: 4),
+              const Text('업종을 직접 선택해 주세요',
+                  style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ),
+        const Divider(height: 24),
+        Expanded(child: _buildCategoryGrid()),
+      ],
+    );
+  }
+
+  Widget _buildCategoryGrid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1.1,
       ),
+      itemCount: CardCategory.values.length,
+      itemBuilder: (context, index) {
+        final cat = CardCategory.values[index];
+        return InkWell(
+          onTap: () => context.push('/ranking', extra: cat),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(cat.emoji, style: const TextStyle(fontSize: 28)),
+                const SizedBox(height: 4),
+                Text(cat.label,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                    textAlign: TextAlign.center),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

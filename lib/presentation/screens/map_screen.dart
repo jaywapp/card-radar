@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:card_radar/core/merchant_categories.dart';
 import 'package:card_radar/core/naver_map_config.dart';
 import 'package:card_radar/data/models/category.dart';
@@ -16,6 +17,19 @@ class MapScreen extends ConsumerStatefulWidget {
 class _MapScreenState extends ConsumerState<MapScreen> {
   final _searchController = TextEditingController();
   List<MapEntry<String, CardCategory>> _suggestions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _requestLocationPermission();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    final status = await Permission.location.status;
+    if (status.isDenied) {
+      await Permission.location.request();
+    }
+  }
 
   @override
   void dispose() {
@@ -35,13 +49,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     _clearSearch();
     if (q.isEmpty) return;
     final category = findCategory(q);
-    if (category == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('"$q" 업체를 찾을 수 없어요')),
-      );
-      return;
+    if (category != null) {
+      showMerchantCardSheet(context, merchantName: q, category: category);
+    } else {
+      // 매칭 실패 시 카테고리 직접 선택으로 fallback
+      _showCategoryPicker();
     }
-    showMerchantCardSheet(context, merchantName: q, category: category);
   }
 
   void _clearSearch() {
@@ -58,7 +71,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         children: [
           const Padding(
             padding: EdgeInsets.all(16),
-            child: Text('카테고리 선택',
+            child: Text('어떤 업종인가요?',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           ),
           ...CardCategory.values.map((cat) => ListTile(
