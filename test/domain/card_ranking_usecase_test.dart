@@ -59,4 +59,34 @@ void main() {
     );
     expect(result, isEmpty);
   });
+
+  final merchantBenefits = [
+    const CardBenefit(cardId: 'card-a', category: CardCategory.convenience, benefitType: 'cashback', rate: 5.0, merchants: ['gs25']),
+    const CardBenefit(cardId: 'card-b', category: CardCategory.convenience, benefitType: 'points', rate: 3.0, merchants: ['cu']),
+  ];
+
+  test('merchantKey가 주어지면 해당 가맹점 혜택만 매칭된다', () {
+    final result = useCase.rank(
+      category: CardCategory.convenience,
+      userCards: cards,
+      allBenefits: merchantBenefits,
+      merchantKey: 'gs25',
+    );
+    expect(result.first.card.id, 'card-a');
+    expect(result.first.hasBenefit, true);
+    expect(result.first.benefit!.rate, 5.0);
+    final cardB = result.firstWhere((r) => r.card.id == 'card-b');
+    expect(cardB.hasBenefit, false);
+  });
+
+  test('merchantKey에 매칭되는 혜택이 없으면 전부 혜택 없음으로 정렬된다', () {
+    final result = useCase.rank(
+      category: CardCategory.convenience,
+      userCards: cards,
+      allBenefits: merchantBenefits,
+      merchantKey: 'seveneleven',
+    );
+    expect(result.length, cards.length);
+    expect(result.every((r) => !r.hasBenefit), isTrue);
+  });
 }

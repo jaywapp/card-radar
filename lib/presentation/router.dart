@@ -9,6 +9,9 @@ import 'package:card_radar/presentation/screens/ranking_screen.dart';
 import 'package:card_radar/presentation/screens/my_cards_screen.dart';
 import 'package:card_radar/presentation/screens/search_screen.dart';
 import 'package:card_radar/presentation/screens/map_screen.dart';
+import 'package:card_radar/presentation/screens/settings_screen.dart';
+import 'package:card_radar/presentation/screens/legal/privacy_policy_screen.dart';
+import 'package:card_radar/presentation/screens/legal/terms_screen.dart';
 import 'package:card_radar/presentation/widgets/feedback_fab.dart';
 
 final appRouter = GoRouter(
@@ -45,6 +48,9 @@ final appRouter = GoRouter(
         GoRoute(path: '/my-cards', builder: (_, __) => const MyCardsScreen()),
         GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
         GoRoute(path: '/map', builder: (_, __) => const MapScreen()),
+        GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
+        GoRoute(path: '/legal/privacy', builder: (_, __) => const PrivacyPolicyScreen()),
+        GoRoute(path: '/legal/terms', builder: (_, __) => const TermsScreen()),
       ],
     ),
   ],
