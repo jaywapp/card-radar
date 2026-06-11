@@ -33,6 +33,11 @@ class HomeScreen extends ConsumerWidget {
             tooltip: '내 카드 관리',
             onPressed: () => context.push('/my-cards'),
           ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            tooltip: '설정',
+            onPressed: () => context.push('/settings'),
+          ),
         ],
       ),
       body: Column(
