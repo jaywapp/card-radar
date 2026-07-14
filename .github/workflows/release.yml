@@ -27,29 +27,34 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Create github_config.dart from secrets
-        run: |
-          cat > lib/core/github_config.dart << 'EOF'
-          const String githubIssueToken = '${{ secrets.GH_ISSUE_TOKEN }}';
-          EOF
-
-      - name: Create kftc_config.dart from secrets
-        run: |
-          cat > lib/core/kftc_config.dart << 'EOF'
-          const String kftcClientId = '${{ secrets.KFTC_CLIENT_ID }}';
-          const String kftcClientSecret = '${{ secrets.KFTC_CLIENT_SECRET }}';
-          const String kftcRedirectUri = 'https://kmgoanbulmxmeuzmxmnv.supabase.co/functions/v1/kftc-callback';
-          const String kftcBaseUrl = 'https://testapi.openbanking.or.kr';
-          EOF
-
       - name: Get dependencies
         run: flutter pub get
 
       - name: Run tests
         run: flutter test
 
+      - name: Prepare release signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          test -n "$KEYSTORE_BASE64"
+          test -n "$KEYSTORE_PASSWORD"
+          test -n "$KEY_ALIAS"
+          test -n "$KEY_PASSWORD"
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > android/app/release-keystore.jks
+
       - name: Build APK (release)
-        run: flutter build apk --release --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+        env:
+          KEYSTORE_FILE: ${{ github.workspace }}/android/app/release-keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KFTC_CLIENT_ID: ${{ secrets.KFTC_CLIENT_ID }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: flutter build apk --release --dart-define=KFTC_CLIENT_ID="$KFTC_CLIENT_ID" --dart-define=SENTRY_DSN="$SENTRY_DSN"
 
       - name: Upload APK to GitHub Releases
         uses: softprops/action-gh-release@v2

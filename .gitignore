@@ -47,6 +47,9 @@ app.*.map.json
 # Secrets
 .env
 .env.*
+!.env.functions.example
+*.jks
+*.keystore
 lib/core/kftc_config.dart
 lib/core/github_config.dart
 

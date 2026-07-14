@@ -14,6 +14,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox<String>('user_cards');
+  await Hive.openBox<String>('oauth_state');
   if (supabaseConfigured) {
     await Supabase.initialize(url: supabaseUrl, publishableKey: supabaseAnonKey);
   }

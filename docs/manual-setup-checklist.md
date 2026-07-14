@@ -36,26 +36,33 @@
 - [ ] **2-4.** 좌측 **Settings → API** 에서 두 가지 복사해두기:
   - **Project URL** (예: `https://xxxx.supabase.co`)
   - **anon public key** (긴 JWT 토큰)
-- [ ] **2-5.** SQL Editor에서 아래 테이블 생성 실행:
+- [ ] **2-5.** Supabase CLI로 프로젝트를 연결하고 버전 관리된 마이그레이션을 적용:
 
-```sql
-create table cards (
-  id text primary key,
-  name text not null,
-  issuer text not null,
-  image_url text,
-  apply_url text
-);
-
-create table card_benefits (
-  id uuid primary key default gen_random_uuid(),
-  card_id text references cards(id),
-  category text not null,
-  benefit_type text not null,
-  rate numeric(5,2) not null,
-  conditions text
-);
+```powershell
+supabase link --project-ref YOUR_PROJECT_REF
+supabase db push --dry-run
+supabase db push
 ```
+
+  마이그레이션은 `cards`, `card_benefits` 테이블에 RLS를 활성화하고
+  `anon`, `authenticated` 역할에는 조회 권한만 부여합니다.
+
+- [ ] **2-6.** `.env.functions.example`을 `.env.functions`로 복사하고 실제 값을 입력
+  - `GH_ISSUE_TOKEN`: `jaywapp/card-radar` Issues 쓰기만 허용한 fine-grained token
+  - `KFTC_CLIENT_ID`, `KFTC_CLIENT_SECRET`: 오픈뱅킹 애플리케이션 자격 증명
+  - `KFTC_REDIRECT_URI`: `kftc-callback` 함수 URL
+  - `KFTC_BANK_TRAN_ID_PREFIX`: 이용기관코드 10자리와 `U`를 합친 접두사
+
+- [ ] **2-7.** 함수 시크릿 등록 및 Edge Functions 배포:
+
+```powershell
+supabase secrets set --env-file .env.functions
+supabase functions deploy kftc-callback kftc-import submit-feedback
+```
+
+  `supabase/config.toml`에서 세 함수의 JWT 검증을 비활성화했습니다. 로그인 없는
+  모바일 앱과 외부 KFTC 콜백이 호출하는 공개 엔드포인트이므로, 외부 서비스
+  비밀키는 반드시 Edge Function 환경 변수에만 저장합니다.
 
 ---
 

@@ -1,0 +1,8 @@
+[functions.kftc-callback]
+verify_jwt = false
+
+[functions.kftc-import]
+verify_jwt = false
+
+[functions.submit-feedback]
+verify_jwt = false
