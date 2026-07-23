@@ -27,7 +27,8 @@
 
 ## 설치 방법
 
-[Releases](https://github.com/jaywapp/card-radar/releases)에서 최신 `app-release.apk` 다운로드 후 설치
+[Releases](https://github.com/jaywapp/card-radar/releases)에서 최신
+`card-radar-<version>-release.apk`를 다운로드 후 설치
 
 ## 기술 스택
 
@@ -35,7 +36,8 @@
 - **Riverpod** 2.x (상태 관리)
 - **Hive CE** (로컬 저장소)
 - **Go Router** (화면 전환)
-- **GitHub Actions** (CI/CD — APK 자동 빌드)
+- **GitHub Actions** (`main` 푸시 시 서명된 APK 자동 릴리스)
+- **Supabase Edge Functions** (`제보`를 GitHub Issues에 안전하게 등록)
 
 ## 실행 방법
 

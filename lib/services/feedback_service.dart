@@ -1,45 +1,63 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:card_radar/core/github_config.dart';
+import 'package:flutter/foundation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:card_radar/core/supabase_config.dart';
 
 enum FeedbackType { bug, improvement }
 
-class FeedbackService {
-  static const _repo = 'jaywapp/card-radar';
+class FeedbackSubmissionResult {
+  const FeedbackSubmissionResult({required this.isSuccess, this.issueNumber});
 
-  static Future<bool> submit({
+  final bool isSuccess;
+  final int? issueNumber;
+}
+
+class FeedbackService {
+  static Future<FeedbackSubmissionResult> submit({
     required String title,
     required String description,
     required FeedbackType type,
+    String? contact,
   }) async {
-    if (githubIssueToken.isEmpty) return false;
-    try {
-      final label = type == FeedbackType.bug ? 'bug' : 'enhancement';
-      final body = '''**유형**: ${type == FeedbackType.bug ? '🐛 버그' : '💡 불편사항'}
-
-**내용**:
-$description
-
----
-*앱에서 직접 제보된 이슈입니다.*''';
-
-      final response = await http.post(
-        Uri.parse('https://api.github.com/repos/$_repo/issues'),
-        headers: {
-          'Authorization': 'Bearer $githubIssueToken',
-          'Accept': 'application/vnd.github+json',
-          'X-GitHub-Api-Version': '2022-11-28',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'title': title,
-          'body': body,
-          'labels': [label],
-        }),
-      );
-      return response.statusCode == 201;
-    } catch (_) {
-      return false;
+    if (!supabaseConfigured) {
+      return const FeedbackSubmissionResult(isSuccess: false);
     }
+
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      final response = await Supabase.instance.client.functions.invoke(
+        'submit-feedback',
+        body: {
+          'title': title,
+          'description': description,
+          'type': type.name,
+          'contact': contact?.trim(),
+          'appVersion': packageInfo.version,
+          'platform': _platformName,
+        },
+      );
+      final data = response.data;
+      final issueNumber = data is Map<String, dynamic>
+          ? data['issueNumber'] as int?
+          : null;
+      return FeedbackSubmissionResult(
+        isSuccess: response.status == 201,
+        issueNumber: issueNumber,
+      );
+    } catch (_) {
+      return const FeedbackSubmissionResult(isSuccess: false);
+    }
+  }
+
+  static String get _platformName {
+    if (kIsWeb) return 'web';
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.android => 'android',
+      TargetPlatform.iOS => 'ios',
+      TargetPlatform.windows => 'windows',
+      TargetPlatform.macOS => 'macos',
+      TargetPlatform.linux => 'linux',
+      TargetPlatform.fuchsia => 'fuchsia',
+    };
   }
 }

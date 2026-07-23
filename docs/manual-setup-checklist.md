@@ -57,6 +57,22 @@ create table card_benefits (
 );
 ```
 
+- [ ] **2-6.** Supabase Edge Function 비밀값 등록
+  - `GH_ISSUE_TOKEN`: `jaywapp/card-radar` Issues 쓰기만 허용한 fine-grained token
+  - `FEEDBACK_ALLOWED_ORIGINS`: 웹 앱을 제공할 경우 허용할 출처 목록(쉼표 구분). Android 앱만 제공하면 비워둠
+
+- [ ] **2-7.** 제보 Edge Function 배포
+
+```powershell
+supabase secrets set --env-file .env.functions
+supabase functions deploy submit-feedback
+```
+
+`submit-feedback`은 대상 저장소를 `jaywapp/card-radar`로 고정하고 `제보`
+라벨을 강제합니다. 공개 함수의 속도 제한은 인스턴스 단위의 기본 방어이므로,
+운영 환경에서는 Supabase Gateway 또는 별도 영속 저장소 기반 제한도 함께
+설정하세요.
+
 ---
 
 ## 3. Play Store 배포 준비 (배포 목표 시)
@@ -80,6 +96,17 @@ create table card_benefits (
   - `KEYSTORE_PASSWORD` : storePassword
   - `KEY_ALIAS` : `card-radar`
   - `KEY_PASSWORD` : keyPassword
+
+## 4. GitHub 기본 브랜치 및 자동 릴리스
+
+- [ ] **4-1.** GitHub 저장소의 기본 브랜치를 `master`에서 `main`으로 전환
+- [ ] **4-2.** 브랜치 보호 규칙과 열려 있는 PR의 대상 브랜치를 `main`으로 갱신
+- [ ] **4-3.** GitHub Actions의 `production` Environment 생성 및 승인 정책 확인
+- [ ] **4-4.** `pubspec.yaml`의 버전을 아직 게시되지 않은 값으로 올린 뒤 `main`에 병합
+
+`main` 푸시 시 `v<version>` 태그와 GitHub Release가 생성되고, 서명 검증된
+`card-radar-<version>-release.apk`가 첨부됩니다. 같은 버전 태그가 이미 있으면
+덮어쓰지 않고 실패합니다.
 
 ---
 
