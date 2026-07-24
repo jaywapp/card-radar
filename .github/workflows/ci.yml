@@ -2,9 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: card-radar-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test-and-build:
@@ -23,7 +30,8 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          flutter-version: '3.41.9'
+          cache: true
 
       - name: Create github_config.dart
         run: |
@@ -41,7 +49,10 @@ jobs:
           EOF
 
       - name: Get dependencies
-        run: flutter pub get
+        run: flutter pub get --enforce-lockfile
+
+      - name: Analyze
+        run: flutter analyze
 
       - name: Run tests
         run: flutter test
