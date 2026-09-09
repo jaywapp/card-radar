@@ -5,6 +5,8 @@ import 'package:card_radar/data/models/kftc_token.dart';
 
 class KftcRepository {
   Uri buildAuthUri(String state) {
+    _requireConfiguration();
+    if (state.isEmpty) throw ArgumentError('OAuth state is required');
     return Uri.parse('$kftcBaseUrl/oauth/2.0/authorize').replace(
       queryParameters: {
         'response_type': 'code',
@@ -18,6 +20,10 @@ class KftcRepository {
   }
 
   Future<KftcToken> exchangeCode(String code) async {
+    _requireConfiguration(requireSecret: true);
+    if (code.trim().isEmpty) {
+      throw ArgumentError('Authorization code is required');
+    }
     final res = await http.post(
       Uri.parse('$kftcBaseUrl/oauth/2.0/token'),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -30,14 +36,18 @@ class KftcRepository {
       },
     );
     if (res.statusCode != 200) {
-      throw Exception('토큰 교환 실패: ${res.statusCode} ${res.body}');
+      throw Exception('토큰 교환 실패: ${res.statusCode}');
     }
-    return KftcToken.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
+    return KftcToken.fromJson(_decodeObject(res.body));
   }
 
   Future<List<String>> fetchCardNames(KftcToken token) async {
+    if (token.accessToken.trim().isEmpty || token.userSeqNo.trim().isEmpty) {
+      throw ArgumentError('A valid card access token is required');
+    }
     final now = DateTime.now();
-    final ts = '${now.year}'
+    final ts =
+        '${now.year}'
         '${now.month.toString().padLeft(2, '0')}'
         '${now.day.toString().padLeft(2, '0')}'
         '${now.hour.toString().padLeft(2, '0')}'
@@ -64,14 +74,43 @@ class KftcRepository {
       },
     );
     if (res.statusCode != 200) {
-      throw Exception('카드 조회 실패: ${res.statusCode} ${res.body}');
+      throw Exception('카드 조회 실패: ${res.statusCode}');
     }
 
-    final body = jsonDecode(res.body) as Map<String, dynamic>;
-    final cards = body['card_list'] as List<dynamic>? ?? [];
-    return cards
-        .map((c) => (c as Map<String, dynamic>)['card_nm'] as String? ?? '')
-        .where((name) => name.isNotEmpty)
-        .toList();
+    final body = _decodeObject(res.body);
+    final cards = body['card_list'] ?? [];
+    if (cards is! List) {
+      throw const FormatException('Invalid card list response');
+    }
+    final names = <String>[];
+    for (final card in cards) {
+      if (card is! Map<String, dynamic>) {
+        throw const FormatException('Invalid card entry');
+      }
+      final name = card['card_nm'];
+      if (name != null && name is! String) {
+        throw const FormatException('Invalid card name');
+      }
+      if (name is String && name.isNotEmpty) names.add(name);
+    }
+    return names;
+  }
+
+  void _requireConfiguration({bool requireSecret = false}) {
+    if (kftcClientId.trim().isEmpty ||
+        !(Uri.tryParse(kftcRedirectUri)?.hasScheme ?? false) ||
+        (requireSecret && kftcClientSecret.trim().isEmpty)) {
+      throw StateError('카드 연동 설정이 필요합니다');
+    }
+  }
+
+  Map<String, dynamic> _decodeObject(String source) {
+    try {
+      final decoded = jsonDecode(source);
+      if (decoded is Map<String, dynamic>) return decoded;
+    } on FormatException {
+      // Do not expose response bodies containing tokens or personal data.
+    }
+    throw const FormatException('Invalid card service response');
   }
 }

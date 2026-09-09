@@ -41,6 +41,13 @@
 
 ## 실행 방법
 
+최초 로컬 실행 전, `lib/core/kftc_config.dart`가 없다면
+`lib/core/kftc_config.dart.example`을 같은 디렉터리의 `kftc_config.dart`로 복사합니다.
+기존 설정 파일은 덮어쓰지 않습니다. 설정 파일은 Git에서 제외됩니다.
+예제는 `KFTC_CLIENT_ID`, `KFTC_CLIENT_SECRET`, `KFTC_REDIRECT_URI`의
+`--dart-define` 값을 읽습니다. 미설정 상태에서도 로컬 분석·테스트를 실행할 수 있으며,
+실제 카드 연동은 유효한 설정과 별도 연동 검증이 필요합니다.
+
 ```bash
 flutter pub get
 flutter run

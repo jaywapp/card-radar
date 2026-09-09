@@ -24,15 +24,19 @@ class _MyCardsScreenState extends ConsumerState<MyCardsScreen> {
   @override
   Widget build(BuildContext context) {
     final notifier = ref.read(userCardsProvider.notifier);
+    final selectedIds = ref
+        .watch(userCardsProvider)
+        .map((card) => card.id)
+        .toSet();
     final cardsAsync = ref.watch(allCardsProvider);
     final importState = ref.watch(kftcImportProvider);
 
     ref.listen(kftcImportProvider, (_, next) {
       if (next.status == KftcImportStatus.success ||
           next.status == KftcImportStatus.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.message ?? '')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.message ?? '')));
         ref.read(kftcImportProvider.notifier).reset();
       }
     });
@@ -40,9 +44,7 @@ class _MyCardsScreenState extends ConsumerState<MyCardsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('내 카드 관리'),
-        actions: [
-          _ImportButton(importState: importState),
-        ],
+        actions: [_ImportButton(importState: importState)],
       ),
       body: Column(
         children: [
@@ -78,15 +80,19 @@ class _MyCardsScreenState extends ConsumerState<MyCardsScreen> {
                 final filtered = _query.isEmpty
                     ? cards
                     : cards
-                        .where((c) =>
-                            c.name.toLowerCase().contains(_query) ||
-                            c.issuer.toLowerCase().contains(_query))
-                        .toList();
+                          .where(
+                            (c) =>
+                                c.name.toLowerCase().contains(_query) ||
+                                c.issuer.toLowerCase().contains(_query),
+                          )
+                          .toList();
 
                 if (filtered.isEmpty) {
                   return const Center(
-                    child: Text('검색 결과가 없습니다',
-                        style: TextStyle(color: Colors.grey)),
+                    child: Text(
+                      '검색 결과가 없습니다',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   );
                 }
 
@@ -97,7 +103,7 @@ class _MyCardsScreenState extends ConsumerState<MyCardsScreen> {
                     return CheckboxListTile(
                       title: Text(card.name),
                       subtitle: Text(card.issuer),
-                      value: notifier.contains(card.id),
+                      value: selectedIds.contains(card.id),
                       onChanged: (checked) async {
                         if (checked == true) {
                           await notifier.addCard(card.id);
@@ -123,7 +129,8 @@ class _ImportButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = importState.status == KftcImportStatus.loading ||
+    final isLoading =
+        importState.status == KftcImportStatus.loading ||
         importState.status == KftcImportStatus.waitingCallback;
 
     return isLoading
@@ -132,7 +139,10 @@ class _ImportButton extends ConsumerWidget {
             child: SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
             ),
           )
         : IconButton(

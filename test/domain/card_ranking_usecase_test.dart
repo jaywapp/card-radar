@@ -12,13 +12,71 @@ void main() {
   ];
 
   final benefits = [
-    const CardBenefit(cardId: 'card-a', category: CardCategory.convenience, benefitType: 'cashback', rate: 5.0),
-    const CardBenefit(cardId: 'card-b', category: CardCategory.convenience, benefitType: 'points', rate: 3.0),
-    const CardBenefit(cardId: 'card-a', category: CardCategory.cafe, benefitType: 'cashback', rate: 2.0),
+    const CardBenefit(
+      cardId: 'card-a',
+      category: CardCategory.convenience,
+      benefitType: 'cashback',
+      rate: 5.0,
+    ),
+    const CardBenefit(
+      cardId: 'card-b',
+      category: CardCategory.convenience,
+      benefitType: 'points',
+      rate: 3.0,
+    ),
+    const CardBenefit(
+      cardId: 'card-a',
+      category: CardCategory.cafe,
+      benefitType: 'cashback',
+      rate: 2.0,
+    ),
   ];
 
   late CardRankingUseCase useCase;
   setUp(() => useCase = CardRankingUseCase());
+
+  test(
+    'best benefit retains the first tie and unrestricted merchant fallback',
+    () {
+      const first = CardBenefit(
+        cardId: 'card-a',
+        category: CardCategory.cafe,
+        benefitType: 'cashback',
+        rate: 5,
+      );
+      const tied = CardBenefit(
+        cardId: 'card-a',
+        category: CardCategory.cafe,
+        benefitType: 'points',
+        rate: 5,
+      );
+      const excluded = CardBenefit(
+        cardId: 'card-a',
+        category: CardCategory.cafe,
+        benefitType: 'points',
+        rate: 20,
+        merchants: ['other'],
+      );
+      final result = useCase.rank(
+        category: CardCategory.cafe,
+        userCards: cards,
+        allBenefits: [first, tied, excluded],
+        merchantKey: 'shop',
+      );
+      expect(identical(result.first.benefit, first), isTrue);
+      expect(result.skip(1).map((r) => r.card.id), ['card-b', 'card-c']);
+      expect(
+        useCase
+            .rank(
+              category: CardCategory.cafe,
+              userCards: cards,
+              allBenefits: [],
+            )
+            .map((r) => r.card.id),
+        cards.map((c) => c.id),
+      );
+    },
+  );
 
   test('카테고리 일치 카드를 rate 내림차순으로 정렬', () {
     final result = useCase.rank(
@@ -61,8 +119,20 @@ void main() {
   });
 
   final merchantBenefits = [
-    const CardBenefit(cardId: 'card-a', category: CardCategory.convenience, benefitType: 'cashback', rate: 5.0, merchants: ['gs25']),
-    const CardBenefit(cardId: 'card-b', category: CardCategory.convenience, benefitType: 'points', rate: 3.0, merchants: ['cu']),
+    const CardBenefit(
+      cardId: 'card-a',
+      category: CardCategory.convenience,
+      benefitType: 'cashback',
+      rate: 5.0,
+      merchants: ['gs25'],
+    ),
+    const CardBenefit(
+      cardId: 'card-b',
+      category: CardCategory.convenience,
+      benefitType: 'points',
+      rate: 3.0,
+      merchants: ['cu'],
+    ),
   ];
 
   test('merchantKey가 주어지면 해당 가맹점 혜택만 매칭된다', () {
