@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:card_radar/core/kftc_card_matcher.dart';
 import 'package:card_radar/data/repositories/kftc_repository.dart';
@@ -21,12 +22,11 @@ class KftcImportState {
     KftcImportStatus? status,
     String? message,
     int? importedCount,
-  }) =>
-      KftcImportState(
-        status: status ?? this.status,
-        message: message ?? this.message,
-        importedCount: importedCount ?? this.importedCount,
-      );
+  }) => KftcImportState(
+    status: status ?? this.status,
+    message: message ?? this.message,
+    importedCount: importedCount ?? this.importedCount,
+  );
 }
 
 class KftcImportNotifier extends StateNotifier<KftcImportState> {
@@ -37,20 +37,30 @@ class KftcImportNotifier extends StateNotifier<KftcImportState> {
   KftcImportNotifier(this._ref) : super(const KftcImportState());
 
   Future<void> startOAuth() async {
-    _pendingState = DateTime.now().millisecondsSinceEpoch.toString();
-    final uri = _repo.buildAuthUri(_pendingState);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    try {
+      _pendingState = DateTime.now().millisecondsSinceEpoch.toString();
+      final uri = _repo.buildAuthUri(_pendingState);
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        _pendingState = '';
+        state = state.copyWith(
+          status: KftcImportStatus.error,
+          message: '브라우저를 열 수 없습니다',
+        );
+        return;
+      }
+      state = state.copyWith(status: KftcImportStatus.waitingCallback);
+    } catch (error) {
+      _pendingState = '';
+      debugPrint('KFTC authorization failed: ${error.runtimeType}');
       state = state.copyWith(
         status: KftcImportStatus.error,
-        message: '브라우저를 열 수 없습니다',
+        message: '카드 연동 설정과 브라우저 상태를 확인해 주세요',
       );
-      return;
     }
-    state = state.copyWith(status: KftcImportStatus.waitingCallback);
   }
 
   Future<void> handleAuthCode(String code, String returnedState) async {
-    if (returnedState.isNotEmpty && returnedState != _pendingState) {
+    if (_pendingState.isEmpty || returnedState != _pendingState) {
       state = state.copyWith(
         status: KftcImportStatus.error,
         message: '보안 오류: state 불일치',
@@ -58,6 +68,7 @@ class KftcImportNotifier extends StateNotifier<KftcImportState> {
       return;
     }
 
+    _pendingState = '';
     state = state.copyWith(status: KftcImportStatus.loading);
     try {
       final token = await _repo.exchangeCode(code);
@@ -77,24 +88,29 @@ class KftcImportNotifier extends StateNotifier<KftcImportState> {
             : '${matchedIds.length}개 카드를 불러왔습니다',
       );
     } catch (e) {
+      debugPrint('KFTC card import failed: ${e.runtimeType}');
       state = state.copyWith(
         status: KftcImportStatus.error,
-        message: e.toString(),
+        message: '카드를 불러오지 못했습니다. 다시 시도해 주세요',
       );
     }
   }
 
   void handleError(String error) {
+    _pendingState = '';
     state = state.copyWith(
       status: KftcImportStatus.error,
       message: '인증 실패: $error',
     );
   }
 
-  void reset() => state = const KftcImportState();
+  void reset() {
+    _pendingState = '';
+    state = const KftcImportState();
+  }
 }
 
 final kftcImportProvider =
     StateNotifierProvider<KftcImportNotifier, KftcImportState>(
-  (ref) => KftcImportNotifier(ref),
-);
+      (ref) => KftcImportNotifier(ref),
+    );

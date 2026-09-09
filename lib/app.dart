@@ -18,7 +18,12 @@ class _CardRadarAppState extends ConsumerState<CardRadarApp> {
   @override
   void initState() {
     super.initState();
-    _linkSub = AppLinks().uriLinkStream.listen(_handleDeepLink);
+    _linkSub = AppLinks().uriLinkStream.listen(
+      _handleDeepLink,
+      onError: (Object error) {
+        debugPrint('Deep link stream failed: ${error.runtimeType}');
+      },
+    );
   }
 
   @override
@@ -29,7 +34,7 @@ class _CardRadarAppState extends ConsumerState<CardRadarApp> {
 
   void _handleDeepLink(Uri uri) {
     if (uri.scheme != 'cardradar' || uri.host != 'auth') return;
-    final code  = uri.queryParameters['code'];
+    final code = uri.queryParameters['code'];
     final error = uri.queryParameters['error'];
     final state = uri.queryParameters['state'] ?? '';
     final notifier = ref.read(kftcImportProvider.notifier);
@@ -53,14 +58,14 @@ class _CardRadarAppState extends ConsumerState<CardRadarApp> {
 }
 
 ThemeData _lightTheme() => ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0)),
-      useMaterial3: true,
-    );
+  colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0)),
+  useMaterial3: true,
+);
 
 ThemeData _darkTheme() => ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF1565C0),
-        brightness: Brightness.dark,
-      ),
-      useMaterial3: true,
-    );
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color(0xFF1565C0),
+    brightness: Brightness.dark,
+  ),
+  useMaterial3: true,
+);
